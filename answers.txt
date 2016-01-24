@@ -1,1 +1,18 @@
-
+12. 
+    a. There have  been 5 commits (personal commits)
+    
+    b. The .gitignore was modified by optimus9p on August 24th, 2015
+    
+    c. The graph section indicates that there were four commits on the week of August the 23rd but
+    it doesn't say anything about August 21st. Not sure if this is a typo or I'm just not seeing anything on the 21st.
+    
+    d. The src file was modified 5 times
+    
+    e. git status lists the files that have been changed but have yet to be committed
+       git log prints out the commits that have been filed in order
+       
+    f. git show [commit] will show you the main.java commit
+    
+    g. You want to first bring up the history with git log and then you want to append --grep=<whatever word you're looking for>
+    
+    h. Same thing with g but we're gonna use git log --author="Lauren" --before 02/16/2016 --after 01/05/2016
