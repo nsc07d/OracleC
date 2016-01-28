@@ -1,14 +1,32 @@
 //============================================================================
 // Name        : HardwoodSellerC.cpp
-// Author      : Nate Craver
+// Author      : Nathaniel Craver
 // Version     : 1
 // Copyright   : It's free
 // Description : Main class for the Hardwood Seller
 //============================================================================
 
 #include <iostream>
+#include <deque>
+#include <vector>
+#include <algorithm>
+#include <fstream>
+#include <iomanip>
+#include "WoodItem.h"
 using namespace std;
 
+
+//Function Prototypes~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+double deliveryTime(const WoodItem &w, const int &p);
+void readInputFile(string inputFilePath);
+void buyerInfo(string& x, int y, string& buyer, string& address, string& date, string& temp);
+void parseOrder(string &line, deque<WoodItem> &purorder, deque<string> &wood, deque<int> &allWood,
+	string &typeOfWood, string &itemp);
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+/*
+*	Start int main()
+*/
 int main() {
 	string fileName;
 		
@@ -22,8 +40,8 @@ int main() {
 }
 
 /*
- * Method to read the input file
- */
+* Method to read the input file
+*/
 void readInputFile(string inputFilePath) {
 
 	//First line placeholder strings
@@ -37,7 +55,10 @@ void readInputFile(string inputFilePath) {
 
 	//Function to parse just the first line
 	buyerInfo(firstLine, count, buyer, address, date, temp);
-	
+
+	//Get the second line
+	getline(inFile, firstLine);
+
 	//Declaring what is needed to parse second line
 	deque<WoodItem> purorder;
 	deque<string> wood;
@@ -47,13 +68,80 @@ void readInputFile(string inputFilePath) {
 
 	//Sending that information in to parseOrder();
 	parseOrder(firstLine, purorder, wood, allWood, typeOfWood, itemp);
+
+	//TOTALING UP AND PRINTING OUT EVERYTHING~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	double woodQuanAmount = 0, totalWoodQuantity = 0, totalWoodPrice = 0, tempETA;
+	vector<double> eta;
+
+	cout << "Buyer Name: " << buyer << endl
+		<< "Address: " << address << endl
+		<< "Purchase Date: " << date << endl;
+
+	cout << "Order Details:" << endl;
+	/*
+		This while loop will gather information about two deques that have our
+		WoodItem and the amount of that woodtype in the order. Simple math gives us
+		the cost and the deliveryTime() function gives us the correct ETA which we
+		simply print out to the screen.
+	*/
+	while (!purorder.empty())
+	{
+		totalWoodQuantity += allWood.back();
+		cout << "Wood Type: " << purorder.back().type << "   Quantity: " << allWood.back()
+			<< "   Price/BF: $" << purorder.back().price << endl;
+		woodQuanAmount = purorder.back().price * allWood.back();
+		cout << "Cost: $" << fixed << setprecision(2) << woodQuanAmount << endl;
+		tempETA = deliveryTime(purorder.back(), allWood.back());
+		eta.push_back(tempETA);
+
+		totalWoodPrice += woodQuanAmount;
+		purorder.pop_back();
+		allWood.pop_back();
+	}
+	auto iter = max_element(eta.begin(), eta.end());
+
+	/*
+		If the quantity > 1000 we will not display the rest of the information.
+		This could be done sooner but I chose to do it here.
+	*/
+	if (totalWoodQuantity > 1000)
+	{
+		cout << "I'm sorry, we only handle orders with quantities less than 1000." <<
+			" Please readjust your order." << endl;
+	}
+	else
+	{
+		cout << "Delivery ETA: " << *iter << " hours." << endl;
+		cout << "Total Price: $" << fixed << setprecision(2) << totalWoodPrice << endl;
+	}
+
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	
+	
 }
 
 /*
- * Method to compute the deliveryTime
- */
-double deliveryTime() {
+* Method to compute the deliveryTime. Takes in the back of the stacks since they're
+* of the same WoodTypes and calculates ETA
+*/
+double deliveryTime(const WoodItem &w, const int &woodAmount) {
+
 	double deliveryETA = 0.0;
+
+	//Taken from online assignment page
+	if (woodAmount >= 501 && woodAmount < 1000)
+		deliveryETA = 5.5 * w.baseDeliveryTime;
+	else if (woodAmount >= 401)
+		deliveryETA = 5 * w.baseDeliveryTime;
+	else if (woodAmount >= 301)
+		deliveryETA = 4 * w.baseDeliveryTime;
+	else if (woodAmount >= 201)
+		deliveryETA = 3 * w.baseDeliveryTime;
+	else if (woodAmount >= 101)
+		deliveryETA = 2 * w.baseDeliveryTime;
+	else
+		deliveryETA = 1 * w.baseDeliveryTime;
+
 	return deliveryETA;
 }
 
@@ -89,6 +177,8 @@ void buyerInfo(string& x, int y, string& buyer, string& address, string& date, s
 	//This resets temp and x for parsing the second line
 	temp = "";
 	x = "";
+
+
 }
 
 /*
@@ -154,4 +244,6 @@ void parseOrder(string &line, deque<WoodItem> &purorder, deque<string> &wood, de
 	}
 	int holder = stoi(itemp);
 	allWood.push_front(holder);
+
+
 }
