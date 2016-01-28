@@ -10,19 +10,12 @@
 using namespace std;
 
 int main() {
-	string cherry = "cherry", curly_maple = "curly maple",
-	genuine_mahogany = "genuine mahogany", wenge = "wedge",
-	white_oak = "white oak", sawdust = "sawdust", fileName;
-
-	WoodItem Cherry(cherry, 2.5, 5.95), Curly_Maple(curly_maple, 1.5, 6.00),
-		Genuine_Mahogany(genuine_mahogany, 3, 9.60), Wenge(wenge, 5, 22.35),
-		White_Oak(white_oak, 2.3, 6.70), Sawdust(sawdust, 1, 1.5);
+	string fileName;
 		
-	
-	cout
-		<< "Please enter in Purchase Order file name: ";
+	cout << "Please enter in Purchase Order file name: ";
 	cin >> fileName;
 
+	//Main simply calls readInputFile which does all the work
 	readInputFile(fileName);
 
 	return 0;
