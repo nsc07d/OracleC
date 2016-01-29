@@ -116,13 +116,12 @@ void readInputFile(string inputFilePath) {
 	}
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	
-	
 }
+
 
 /*
 * Method to compute the deliveryTime. Takes in the back of the stacks since they're
-* of the same WoodTypes and calculates ETA
+* of the same WoodTypes and calculates ETA. Random comment for submission.
 */
 double deliveryTime(const WoodItem &w, const int &woodAmount) {
 
